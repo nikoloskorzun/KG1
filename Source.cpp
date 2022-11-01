@@ -1,15 +1,6 @@
-#include <iostream>
+#include "lib.h"
 
-
-
-#include <SDL.h>
-
-
-#include "screen.cpp"
-
-
-
-
+using namespace std;
 /*
 
 Вариант 9.
@@ -40,7 +31,6 @@
 
 
 
-using namespace std;
 
 
 
