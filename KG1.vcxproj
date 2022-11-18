@@ -18,6 +18,29 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="base_polygone.h" />
+    <ClInclude Include="figure.h" />
+    <ClInclude Include="light_source.h" />
+    <ClInclude Include="light_system.h" />
+    <ClInclude Include="plane.h" />
+    <ClInclude Include="polygone.h" />
+    <ClInclude Include="screen.h" />
+    <ClInclude Include="shadow_polygone.h" />
+    <ClInclude Include="template_functions.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="base_polygone.cpp" />
+    <ClCompile Include="figure.cpp" />
+    <ClCompile Include="light_source.cpp" />
+    <ClCompile Include="light_system.cpp" />
+    <ClCompile Include="plane.cpp" />
+    <ClCompile Include="polygone.cpp" />
+    <ClCompile Include="screen.cpp" />
+    <ClCompile Include="shadow_polygone.cpp" />
+    <ClCompile Include="Source.cpp" />
+    <ClCompile Include="template_functions.cpp" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
@@ -146,19 +169,6 @@
       <AdditionalDependencies>C:\Users\Nikolay\source\SDL\lib\x64\SDl2.lib;C:\Users\Nikolay\source\SDL\lib\x64\SDL2main.lib;C:\Users\Nikolay\source\SDL\lib\x64\SDL2_image.lib;C:\Users\Nikolay\source\SDL\lib\x64\SDL2_mixer.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClCompile Include="figure.cpp" />
-    <ClCompile Include="polygone.cpp" />
-    <ClCompile Include="screen.cpp" />
-    <ClCompile Include="Source.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="figure.h" />
-    <ClInclude Include="lib.h" />
-    <ClInclude Include="polygone.h" />
-    <ClInclude Include="screen.h" />
-    <ClInclude Include="template_functions.h" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

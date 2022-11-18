@@ -1,6 +1,39 @@
-#include "lib.h"
+
+#pragma once
+#include <iostream>
+
+
+#include "figure.h"
+
+
+
+#include "polygone.h"
+
+#include "template_functions.cpp"
+
 
 using namespace std;
+
+
+
+
+void Figure::create_projection()
+{
+    //поворот по Y и X
+    register size_t i;
+    register size_t j;
+
+    for (i = 0; i < this->N; i++)
+        for (j = 0; j < this->M; j++)
+        {
+            this->f_proj[i][j] = f[i][j];
+        }
+
+    multing(f_proj, m_proj);
+
+
+
+}
 
 
 Figure::Figure()
@@ -27,50 +60,42 @@ Figure::Figure()
     this->ANGLE = NULL;
     this->SCALE_FACTOR = NULL;
 
-    this->Polygone_count = NULL;
-
-    this->Polygones = NULL;
 
 }
 
-void Figure::painter_algoritm(SDL_Renderer* ren)
+void Figure::associate_figure_with_polygones(Base_polygone** polygone_array, size_t** rule, size_t polugones_count, size_t first_elem_pos)
 {
 
-    register size_t i;
-    register size_t j;
-    register size_t id;
-    for (i = 0; i < Polygone_count; i++)
-        Polygones[i].set_z();
-
-
-    Polygone b;
-    j = Polygone_count - 1;
-    while (j > 0)
+    Polygone* p;
+    for (size_t i = 0; i < polugones_count; i++)
     {
-        id = 0;
-        for (i = 1; i <= j; i++)
-            if (Polygones[i].z > Polygones[id].z)
-                id = i;
+        p = new Polygone;
 
-        b = Polygones[id];
-        Polygones[id] = Polygones[j];
-        Polygones[j] = b;
+        p->associate(this->f[rule[i][0]], this->f[rule[i][1]], this->f[rule[i][2]]);
 
+        polygone_array[i + first_elem_pos] = p;
+            
 
-        j--;
     }
 
+}
+void Figure::associate_figure_proj_with_polygones(Polygone* polygone_array, size_t** rule, size_t polugones_count, size_t first_elem_pos)
+{
+    cout << "ERROR a_f_p_w_p\n\n";
 
+    for (size_t i = 0; i < polugones_count; i++)
+    {
 
+        polygone_array[i + first_elem_pos].associate(this->f_proj[rule[i][0]], this->f_proj[rule[i][1]], this->f_proj[rule[i][2]]);
 
-
-
-
-    draw(ren);
+    }
 
 }
 
-void Figure::set(size_t n, double** coords, size_t** info, size_t len)
+
+
+
+void Figure::set(size_t n, double** coords)
 /*
 
 */
@@ -99,37 +124,26 @@ void Figure::set(size_t n, double** coords, size_t** info, size_t len)
     create_m_rotate_y();
     create_m_rotate_z();
 
+
+    create_m_projection();
+
+
     for (i = 0; i < this->N; i++)
         for (j = 0; j < this->M; j++)
         {
             this->f[i][j] = coords[i][j];
         }
 
+    this->f_proj = allocate_memory_for_N_M_array<double>(this->N, this->M);
 
-    this->Polygone_count = len;
-
-
-
-    this->Polygones = new Polygone[this->Polygone_count];
-
-
-    for (i = 0; i < this->Polygone_count; i++)
-    {
-
-
-        this->Polygones[i].associate(this->f[info[i][0]], this->f[info[i][1]], this->f[info[i][2]]);
-
-
-
-    }
 
 
 }
 
 
-Figure::Figure(size_t n, double** coords, size_t** info, size_t len)
+Figure::Figure(size_t n, double** coords)
 {
-    this->set(n, coords, info, len);
+    this->set(n, coords);
 }
 
 Figure::~Figure()
@@ -154,19 +168,24 @@ Figure::~Figure()
         free_memory_for_N_M_array<double>(this->m_rotate_x, this->M, this->M);
     }
 
+
     if (this->m_rotate_y)
     {
-        free_memory_for_N_M_array<double>(this->m_rotate_x, this->M, this->M);
+        free_memory_for_N_M_array<double>(this->m_rotate_y, this->M, this->M);
     }
 
     if (this->m_rotate_z)
     {
-        free_memory_for_N_M_array<double>(this->m_rotate_x, this->M, this->M);
+        free_memory_for_N_M_array<double>(this->m_rotate_z, this->M, this->M);
+    }
+
+    if (this->m_proj)
+    {
+        free_memory_for_N_M_array<double>(this->m_proj, this->M, this->M);
     }
 
 
-    if (this->Polygones)
-        delete[] this->Polygones;
+   
 
 }
 
@@ -210,6 +229,25 @@ void Figure::move_right()
 
     multing(this->f, m_move);
 }
+void Figure::move_forward()
+{
+    m_move[3][0] = 0; // 
+    m_move[3][1] = 0; // 
+    m_move[3][2] = -this->DZ; //
+
+
+    multing(this->f, m_move);
+}
+void Figure::move_back()
+{
+    m_move[3][0] = 0; // 
+    m_move[3][1] = 0; // 
+    m_move[3][2] = this->DZ; //
+
+
+    multing(this->f, m_move);
+}
+
 
 
 
@@ -253,18 +291,6 @@ void Figure::scale_down()
     scaling(-1);
 
 }
-
-
-void Figure::draw(SDL_Renderer* ren)
-{
-
-    for (register size_t i = 0; i < this->Polygone_count; i++)
-        Polygones[i].draw(ren);
-
-}
-
-
-
 
 inline void Figure::create_m_move()
 {
@@ -379,6 +405,31 @@ inline void Figure::create_m_rotate_z()
 
 }
 
+inline void Figure::create_m_projection()
+{
+    this->m_proj = allocate_memory_for_N_M_array<double>(this->M, this->M);
+
+    this->m_proj[0][0] = 0.7;
+    this->m_proj[0][1] = -0.4;
+    this->m_proj[0][2] = 0;
+    this->m_proj[0][3] = 0;
+
+    this->m_proj[1][0] = 0;
+    this->m_proj[1][1] = 0.8;
+    this->m_proj[1][2] = 0;
+    this->m_proj[1][3] = 0;
+
+    this->m_proj[2][0] = 0.7;
+    this->m_proj[2][1] = 0.4;
+    this->m_proj[2][2] = 1;
+    this->m_proj[2][3] = 0;
+    
+    this->m_proj[3][0] = 0;
+    this->m_proj[3][1] = 0;
+    this->m_proj[3][2] = 0;
+    this->m_proj[3][3] = 1;
+
+}
 
 
 
@@ -477,6 +528,10 @@ inline void Figure::rotate_z(double k)
 
 
 }
+
+
+
+
 
 inline void Figure::scaling(double k)
 {

@@ -1,13 +1,25 @@
 #pragma once
-#include "lib.h"
+#include <iostream>
+
+#include <SDL.h>
+
+#include "base_polygone.h"
+
+#include "template_functions.h"
+
+
 using namespace std;
-class Polygone
+
+
+
+class Polygone : public Base_polygone
+    //Полигон - это всегда треугольник
 {
 public:
 
-    double z;
 
-    Polygone(const Polygone& plygone_copy);
+
+    Polygone(const Polygone& polygone_copy);
 
     
 
@@ -17,23 +29,27 @@ public:
 
     ~Polygone();
 
-    void set_z();
+    virtual void set_z() override;
+
+
     void associate(double* d1, double* d2, double* d3);
 
 
 
+    virtual void set_сolor(Color сolor_) override;
+    virtual Color get_сolor() override;
 
 
 
-    void draw(SDL_Renderer* ren);
+    virtual void draw(SDL_Renderer* ren) override;
 
 private:
-    double** f;
-    uint32_t N;
-
-    color c;
 
 
+
+    double *pointer_vertex_1;
+    double *pointer_vertex_2;
+    double *pointer_vertex_3;
 
 
 

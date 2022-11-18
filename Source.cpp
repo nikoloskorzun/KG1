@@ -1,4 +1,22 @@
-#include "lib.h"
+
+
+
+#include <iostream>
+#include <SDL.h>
+
+//#include "template_functions.h"
+
+
+
+
+#include "screen.h"
+
+
+
+
+
+
+
 
 using namespace std;
 /*
@@ -17,13 +35,15 @@ using namespace std;
 
 /*
 
-Плоскость на которую падает тень. z = 0
+Плоскость на которую падает тень.
 
 Параллелепипед      P
 Треугольная призма  T
 Истоник света       L
 
-Объекты P, T, L могут свободно двигаться
+Плоскость на которую проецируем тени O
+
+Объекты P, T, L, O могут свободно двигаться
 
 
 
@@ -34,17 +54,16 @@ using namespace std;
 
 
 
-
-
-
-
 int main(int argc, char* argv[])
 {
+    srand(1);
 
     Screen s(800, 800);
 
     s.add_figures();
     s.cycle();
+
+
     return 0;
 
 

@@ -1,8 +1,27 @@
 #pragma once
 
+#include <iostream>
+#include <SDL.h>
+
+#include "figure.h"
+#include "light_system.h"
 
 
-#include "lib.h"
+#include "polygone.h"
+#include "shadow_polygone.h"
+
+#include "template_functions.h"
+
+
+
+
+
+/*
+
+*/
+
+
+
 
 
 using namespace std;
@@ -49,11 +68,24 @@ private:
 
     Figure* figures = NULL;
 
+    Light_system* light_system; // она одна
 
 
+    Base_polygone** polygones;
 
 
+    //Polygone* polygones;
 
+
+    //Shadow_polygone* shadow_polygones;
+
+    size_t polygone_count;
+
+    
+    void draw_poligones(SDL_Renderer* ren);
+    void painter_algorithm();
+
+    
 
 
 

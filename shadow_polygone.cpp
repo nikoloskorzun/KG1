@@ -4,57 +4,49 @@
 
 #include <SDL.h>
 
-#include "polygone.h"
+#include "shadow_polygone.h"
 
 
 using namespace std;
 
 
-Polygone::Polygone(const Polygone& polygone_copy)
+Shadow_polygone::Shadow_polygone(const Shadow_polygone& polygone_copy)
 {
-    this->c.r = polygone_copy.c.r;
-    this->c.g = polygone_copy.c.g;
-    this->c.b = polygone_copy.c.b;
-    this->c.a = polygone_copy.c.a;    
-    
+
+    this->c = polygone_copy.c;
+
+
+
     this->z = polygone_copy.z;
     this->pointer_vertex_1 = polygone_copy.pointer_vertex_1;
     this->pointer_vertex_2 = polygone_copy.pointer_vertex_2;
     this->pointer_vertex_3 = polygone_copy.pointer_vertex_3;
 
 
+    cout << "copy ERROR\n";
 
 }
 
-void Polygone::set_ñolor(Color ñolor_)
-{
-    this->c = ñolor_;
-}
-
-Color Polygone::get_ñolor()
-{
-    return this->c;
-}
 
 
-Polygone::Polygone()
+Shadow_polygone::Shadow_polygone()
 {
-    
+
     this->z = NULL;
 
 
-    
 
-    this->c.r = rand() % 256;
-    this->c.g = rand() % 256;
-    this->c.b = rand() % 256;
+
+    this->c.r =255;
+    this->c.g = 255;
+    this->c.b = 255;
     this->c.a = 255;
 
 
 }
 
 
-Polygone& Polygone::operator=(const Polygone& right) {
+Shadow_polygone& Shadow_polygone::operator=(const Shadow_polygone& right) {
 
 
     //#TODO
@@ -64,20 +56,22 @@ Polygone& Polygone::operator=(const Polygone& right) {
         return *this;
     }
 
-    
+
     this->z = right.z;
 
-    
 
 
 
-    this->c = right.c;
+
+    this->c  = right.c;
+
+
 
 
     return *this;
 }
 
-Polygone::~Polygone()
+Shadow_polygone::~Shadow_polygone()
 {
 
 
@@ -86,7 +80,7 @@ Polygone::~Polygone()
 }
 
 
-void Polygone::set_z()
+void Shadow_polygone::set_z()
 {
     /*
 
@@ -108,9 +102,9 @@ void Polygone::set_z()
 
     z = (az + bz + cz + mz + pz + kz) / 6;
 
-   // cout << z<< "   " << c.r <<":" << c.g <<":" << c.b << endl<<endl;
+    // cout << z<< "   " << c.r <<":" << c.g <<":" << c.b << endl<<endl;
 
-        return;
+    return;
 
 
 
@@ -119,20 +113,20 @@ void Polygone::set_z()
 
 
     /*
-    
+
                 A
-        
+
             p
         B       Z   m
-        
+
                k
                        C
 
-    
-    
+
+
     */
 
-    
+
     if (bz != cz)
         this->z = (cz * mz - bz * pz) / (mz + cz - bz - pz);
     else
@@ -160,7 +154,7 @@ void Polygone::set_z()
 
 
 }
-void Polygone::associate(double* d1, double* d2, double* d3)
+void Shadow_polygone::associate(double* d1, double* d2, double* d3)
 {
     this->pointer_vertex_1 = d1;
     this->pointer_vertex_2 = d2;
@@ -169,7 +163,7 @@ void Polygone::associate(double* d1, double* d2, double* d3)
 
 
 
-void  Polygone::draw(SDL_Renderer* ren)
+void  Shadow_polygone::draw(SDL_Renderer* ren)
 {
 
     /*
@@ -192,9 +186,10 @@ void  Polygone::draw(SDL_Renderer* ren)
     SDL_RenderDrawLine(ren, pointer_vertex_1[0], pointer_vertex_1[1], pointer_vertex_3[0], pointer_vertex_3[1]);
     SDL_RenderDrawLine(ren, pointer_vertex_3[0], pointer_vertex_3[1], pointer_vertex_2[0], pointer_vertex_2[1]);
 
-    //  return;
+    //
+    return;
 
-    
+
 
     double* d_;
     if (pointer_vertex_1[0] > pointer_vertex_2[0])
@@ -217,7 +212,7 @@ void  Polygone::draw(SDL_Renderer* ren)
     }
 
 
-    
+
 
 
     // x1= f[2][0]   f[2][1]
@@ -252,8 +247,8 @@ void  Polygone::draw(SDL_Renderer* ren)
     */
 
 
-    
-    
+
+
 
 
 }

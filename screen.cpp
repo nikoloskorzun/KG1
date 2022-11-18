@@ -1,6 +1,29 @@
-#include "lib.h"
+#pragma once
+#include <iostream>
+#include <SDL.h>
+
+
+#include "screen.h"
+#include "figure.h"
+#include "polygone.h"
+
+#include "template_functions.cpp"
+
 
 using namespace std;
+
+static int double_compare(const void* p1, const void* p2)
+{
+    double a = ((Polygone*)p1)->z;
+    double b = ((Polygone*)p2)->z;
+
+
+        
+    if (a < b) return -1;
+    if (a == b) return 0;
+    return 1;
+    
+}
 
 
 Screen::Screen(uint32_t width, uint32_t height) {
@@ -26,8 +49,13 @@ Screen::Screen(uint32_t width, uint32_t height) {
 
 
 
-void Screen::add_figures()
+void Screen::add_figures()//это функция говна, ее можно переписать и сделать инициализацию фигур нормальной, но зачем?
 {
+    this->polygones = new Base_polygone*[(12 + 4)*1 + 1 + 1];
+    this->polygone_count = (12 + 4) * 1 + 1 + 1;
+
+    size_t i = 0;
+
 
     this->figures = new Figure[2];
 
@@ -126,11 +154,15 @@ void Screen::add_figures()
     AB[7][2] = 100;
     AB[7][3] = 1;
 
+    
+
+    this->figures[0].set(8, AB);
 
 
-    this->figures[0].set(8, AB, i_, 12);
 
-
+    this->figures[0].associate_figure_with_polygones(this->polygones, i_, 12);
+ 
+    
     free_memory_for_N_M_array<size_t>(i_, 12, 3);
     free_memory_for_N_M_array<double>(AB, 8, 4);
 
@@ -178,11 +210,64 @@ void Screen::add_figures()
 
 
 
-    this->figures[1].set(4, AB, i_, 4);
+    this->figures[1].set(4, AB);
+    this->figures[1].associate_figure_with_polygones(this->polygones, i_, 4, 12);
+
+
+
 
 
     free_memory_for_N_M_array<size_t>(i_, 4, 3);
     free_memory_for_N_M_array<double>(AB, 4, 4);
+
+
+    double** l = allocate_memory_for_N_M_array<double>(1, 4);
+    l[0][0] = 0;
+    l[0][1] = 0;
+    l[0][2] = 0;
+    l[0][3] = 1;
+
+    double*** p = new double** [1];
+
+
+    p[0] = allocate_memory_for_N_M_array<double>(3, 4);
+
+    p[0][0][0] = 0;
+    p[0][0][1] = 0;
+    p[0][0][2] = 0;
+    p[0][0][3] = 1;
+
+    p[0][1][0] = 1;
+    p[0][1][1] = 0;
+    p[0][1][2] = 0;
+    p[0][1][3] = 1;
+
+    p[0][2][0] = 0;
+    p[0][2][1] = 1;
+    p[0][2][2] = 0;
+    p[0][2][3] = 1;
+
+    this->light_system = new Light_system(l, 1, p);
+
+    
+    this->light_system->associate_plane_with_polygones(this->polygones, 12+4);
+
+    this->light_system->associate_light_source_with_polygones(this->polygones, 12+4+1);
+
+
+
+
+
+    free_memory_for_N_M_array<double>(l, 1, 4);
+
+
+    free_memory_for_N_M_array<double>(p[0], 3, 4);
+
+    delete[] p;
+    
+
+
+
 
 }
 
@@ -190,12 +275,55 @@ void Screen::add_figures()
 
 int Screen::cycle()
 {
+    cout << "Control:\n";
+    cout << "\n\tMove:\n";
+    cout << "\t[w] - y--\n";
+    cout << "\t[a] - x--\n";
+    cout << "\t[s] - y++\n";
+    cout << "\t[d] - x++\n";
+    cout << "\t[q] - z--\n";
+    cout << "\t[e] - z++\n";
+
+    cout << "\n\tRotate:\n";
+    cout << "\t[^] - y- rotate\n";
+    cout << "\t[v] - x- rotate\n";
+    cout << "\t[>] - y+ rotate\n";
+    cout << "\t[<] - x+ rotate\n";
+    cout << "\t[z] - z- rotate\n";
+    cout << "\t[x] - z+ rotate\n";
+
+    cout << "\n\tScale:\n";
+    cout << "\t[+] - increase size\n";
+    cout << "\t[-] - decrease size\n";
+
+    cout << "\n\tChoice:\n";
+    cout << "\t[l] - on/off light control\n";
+    cout << "\t[p] - if light control ON plane control ON/OFF\n";
+
+    cout << "\n\tlight control OFF\n";
+    cout << "\t[1] - choice figure 1\n";
+    cout << "\t[2] - choice figure 2\n";
+
+    cout << "\n\tlight control ON\n";
+    cout << "\t[1] - choice plane 1\n";
+    cout << "\t[2] - choice plane 2\n";
+
+ 
+
     SDL_Event event;
 
 
 
     size_t figure_choice = 0;
+    size_t plane_choice = 0;
+
+    int plane_flag = 1;
+
     int exit = 1;
+    int light_exit = 1;
+
+    int proj_flag = 0;
+
     while (exit == 1)
     {
 
@@ -210,13 +338,119 @@ int Screen::cycle()
             if ((event.type == SDL_KEYDOWN))
             {
 
-
-
-
-
-
                 switch (event.key.keysym.sym)
                 {
+
+                case SDLK_l:
+                    //управление "светом"
+                    light_exit = 1;
+                    while(light_exit)
+                    {
+                        while (SDL_PollEvent(&event))
+                        {
+                            if ((event.type == SDL_KEYDOWN))
+                            {
+                                switch (event.key.keysym.sym)
+                                {
+                                case SDLK_l:
+                                    light_exit = 0;
+                                    break;
+                                case SDLK_p:
+                                    if (plane_flag)
+                                        plane_flag = 0;
+                                    plane_flag = 1;
+                                    break;
+
+
+
+                                case SDLK_w:
+                                    if (plane_flag)
+                                        this->light_system->move_up_plane(plane_choice);
+                                    else
+                                        this->light_system->move_up_light();
+                                    break;
+                                case SDLK_s:
+                                    if (plane_flag)
+                                        this->light_system->move_down_plane(plane_choice);
+                                    else
+                                        this->light_system->move_down_light();
+                                    break;
+
+                                case SDLK_a:
+                                    if (plane_flag)
+                                        this->light_system->move_left_plane(plane_choice);
+                                    else
+                                        this->light_system->move_left_light();
+                                    break;
+                                case SDLK_d:
+                                    if (plane_flag)
+                                        this->light_system->move_right_plane(plane_choice);
+                                    else
+                                        this->light_system->move_right_light();
+                                    break;
+                                case SDLK_q:
+                                    if (plane_flag)
+                                        this->light_system->move_forward_plane(plane_choice);
+                                    else
+                                        this->light_system->move_forward_light();
+                                    break;
+                                case SDLK_e:
+                                    if (plane_flag)
+                                        this->light_system->move_back_plane(plane_choice);
+                                    else
+                                        this->light_system->move_back_light();
+                                    break;
+
+
+                                case SDLK_UP:
+                                    this->light_system->rotate_x_positive_plane(plane_choice);
+                                    break;
+                                case SDLK_DOWN:
+                                    this->light_system->rotate_x_negative_plane(plane_choice);
+                                    break;
+                                case SDLK_RIGHT:
+                                    this->light_system->rotate_y_positive_plane(plane_choice);
+                                    break;
+                                case SDLK_LEFT:
+                                    this->light_system->rotate_y_negative_plane(plane_choice);
+                                    break;
+                                case SDLK_z:
+                                    this->light_system->rotate_z_positive_plane(plane_choice);
+                                    break;
+                                case SDLK_x:
+                                    this->light_system->rotate_z_negative_plane(plane_choice);
+                                    break;
+
+
+                                case SDLK_1:
+                                    if (plane_flag)
+                                        plane_choice = 0;
+
+                                    break;
+
+
+                                case SDLK_2:
+                                    if (plane_flag)
+                                        plane_choice = 1;
+
+                                    break;
+
+
+
+                                }
+                            }
+                        }
+                    
+                    }
+                    break;
+                
+                case SDLK_0:
+                    if(proj_flag)
+                        proj_flag = 0;
+                    else
+                        proj_flag = 1;
+                    break;
+
                 case SDLK_1:
                     figure_choice = 0;
 
@@ -227,22 +461,30 @@ int Screen::cycle()
                     break;
                 case SDLK_w:
                     this->figures[figure_choice].move_up();
-                    //figures->move_up();
+                    
                     break;
                 case SDLK_a:
 
-                    //figures->move_left();
+                    
                     this->figures[figure_choice].move_left();
                     break;
                 case SDLK_s:
-                    //figures->move_down();
+                    
                     this->figures[figure_choice].move_down();
                     break;
                 case SDLK_d:
                     this->figures[figure_choice].move_right();
-                    //figures->move_right();
+                    
                     break;
-                //#TODO движение по z
+                case SDLK_q:
+                    
+                    this->figures[figure_choice].move_forward();
+                    break;
+                case SDLK_e:
+                    this->figures[figure_choice].move_back();
+                    
+                    break;
+                
 
                 case SDLK_UP:
                     this->figures[figure_choice].rotate_x_positive();
@@ -280,8 +522,8 @@ int Screen::cycle()
                 SDL_SetRenderDrawColor(ren, 0x00, 0x00, 0x00, 0x00);
                 SDL_RenderClear(ren);
 
-                this->figures[0].painter_algoritm(ren);
-                this->figures[1].painter_algoritm(ren);
+                
+                draw_poligones(ren);
 
                 SDL_RenderPresent(ren);
 
@@ -315,5 +557,37 @@ Screen::~Screen() {
         SDL_DestroyWindow(win);
     }
 
+    if (polygones)
+        delete[] polygones;
+
+
     SDL_Quit();
+}
+
+
+void Screen::draw_poligones(SDL_Renderer* ren)
+{
+    
+    painter_algorithm();
+
+    
+    for (register size_t i = 0; i < polygone_count; i++)
+        polygones[i]->draw(ren);
+
+}
+
+void Screen::painter_algorithm()
+{
+
+
+    register size_t i;
+
+    for (i = 0; i < polygone_count; i++)
+        polygones[i]->set_z();
+
+
+    qsort(polygones, polygone_count, sizeof(Polygone), double_compare);
+
+
+
 }
