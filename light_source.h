@@ -6,11 +6,11 @@
 
 #include <SDL.h>
 
+
+
+
 #include "base_polygone.h"
-
 #include "template_functions.h"
-
-
 
 using namespace std;
 
@@ -39,6 +39,8 @@ public:
 
 
     virtual void set_ñolor(Color ñolor_) override;
+
+
     virtual Color get_ñolor() override;
 
     virtual void draw(SDL_Renderer* ren) override;

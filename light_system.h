@@ -3,6 +3,8 @@
 
 
 #include "base_polygone.h"
+#include "shadow_polygone.h"
+#include "polygone.h"
 
 #include "plane.h"
 #include "light_source.h"
@@ -18,6 +20,58 @@ using namespace std;
 
 class Light_system
 {
+private:
+    // Математическая оснастка
+
+
+    typedef struct point
+    {
+        double x;
+        double y;
+        double z;
+    };
+
+    typedef struct vector_
+    {
+        double x;
+        double y;
+        double z;
+    };
+
+
+    typedef struct line
+    {
+        point p;
+        vector_ s;
+    };
+
+    typedef struct plane
+    {
+        double A;
+        double B;
+        double C;
+        double D;
+    };
+
+
+    line point_point2line(point p1, point p2)
+    {
+        //прямая по 2 точкам
+        return line{ p1, vector_{p2.x - p1.x, p2.y - p1.y, p2.z - p1.z} };
+    }
+
+    line paral_line_through_point(line l, point p)
+    {
+        //прямая параллельная данной через точку
+        return line{ p, l.s };
+    }
+
+
+
+
+
+
+
 public:
     Light_system(double **coord_light, size_t amount_planes, double*** coord_planes);
 
@@ -44,7 +98,7 @@ public:
     void associate_light_source_with_polygones(Base_polygone** polygone_array, size_t polugones_pos);
 
 
-
+    void shadows_create(size_t amount_polygones, Polygone** polygones, Shadow_polygone** shadow_polygones);
 
 
     
@@ -60,7 +114,7 @@ private:
 
 
 
-
+    size_t create_shadow(size_t number_of_plane, Polygone * polygone, double** vertexes);
 
 
     double** m_move;

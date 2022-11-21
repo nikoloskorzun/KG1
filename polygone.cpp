@@ -12,10 +12,7 @@ using namespace std;
 
 Polygone::Polygone(const Polygone& polygone_copy)
 {
-    this->c.r = polygone_copy.c.r;
-    this->c.g = polygone_copy.c.g;
-    this->c.b = polygone_copy.c.b;
-    this->c.a = polygone_copy.c.a;    
+    this->c = polygone_copy.c; 
     
     this->z = polygone_copy.z;
     this->pointer_vertex_1 = polygone_copy.pointer_vertex_1;
@@ -57,14 +54,18 @@ Polygone::Polygone()
 Polygone& Polygone::operator=(const Polygone& right) {
 
 
-    //#TODO
+    //#TODO 
 
     //проверка на самоприсваивание
     if (this == &right) {
         return *this;
     }
 
-    
+    this->pointer_vertex_1 = right.pointer_vertex_1;
+    this->pointer_vertex_2 = right.pointer_vertex_2;
+    this->pointer_vertex_3 = right.pointer_vertex_3;
+
+
     this->z = right.z;
 
     

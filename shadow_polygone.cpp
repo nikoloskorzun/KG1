@@ -10,6 +10,35 @@
 using namespace std;
 
 
+
+
+
+
+void Shadow_polygone::set_vertexes(size_t count, double** v)
+{
+    this->pointer_vertex_1 = v[0];
+    this->pointer_vertex_2 = v[1];
+    this->pointer_vertex_3 = v[2];
+
+    this->count_of_vertex = count;
+
+
+
+    switch (count)
+    {
+    case 5:
+        this->pointer_vertex_5 = v[4];
+    case 4:
+        this->pointer_vertex_4 = v[3];
+        break;
+
+    }
+
+
+}
+
+
+
 Shadow_polygone::Shadow_polygone(const Shadow_polygone& polygone_copy)
 {
 
@@ -21,9 +50,14 @@ Shadow_polygone::Shadow_polygone(const Shadow_polygone& polygone_copy)
     this->pointer_vertex_1 = polygone_copy.pointer_vertex_1;
     this->pointer_vertex_2 = polygone_copy.pointer_vertex_2;
     this->pointer_vertex_3 = polygone_copy.pointer_vertex_3;
+    this->pointer_vertex_4 = polygone_copy.pointer_vertex_4;
+    this->pointer_vertex_5 = polygone_copy.pointer_vertex_5;
+
+    this->count_of_vertex = polygone_copy.count_of_vertex;
 
 
-    cout << "copy ERROR\n";
+
+    //cout << "copy ERROR\n";
 
 }
 
@@ -33,8 +67,13 @@ Shadow_polygone::Shadow_polygone()
 {
 
     this->z = NULL;
+    this->pointer_vertex_1 = NULL;
+    this->pointer_vertex_2 = NULL;
+    this->pointer_vertex_3 = NULL;
+    this->pointer_vertex_4 = NULL;
+    this->pointer_vertex_5 = NULL;
 
-
+    this->count_of_vertex = 0;
 
 
     this->c.r =255;
@@ -49,7 +88,6 @@ Shadow_polygone::Shadow_polygone()
 Shadow_polygone& Shadow_polygone::operator=(const Shadow_polygone& right) {
 
 
-    //#TODO
 
     //проверка на самоприсваивание
     if (this == &right) {
@@ -58,7 +96,14 @@ Shadow_polygone& Shadow_polygone::operator=(const Shadow_polygone& right) {
 
 
     this->z = right.z;
+    this->pointer_vertex_1 = right.pointer_vertex_1;
+    this->pointer_vertex_2 = right.pointer_vertex_2;
+    this->pointer_vertex_3 = right.pointer_vertex_3;
+    this->pointer_vertex_4 = right.pointer_vertex_4;
+    this->pointer_vertex_5 = right.pointer_vertex_5;
 
+
+    this->count_of_vertex = right.count_of_vertex;
 
 
 
@@ -78,6 +123,8 @@ Shadow_polygone::~Shadow_polygone()
     return;
 
 }
+
+
 
 
 void Shadow_polygone::set_z()
@@ -110,23 +157,6 @@ void Shadow_polygone::set_z()
 
 
 
-
-
-    /*
-
-                A
-
-            p
-        B       Z   m
-
-               k
-                       C
-
-
-
-    */
-
-
     if (bz != cz)
         this->z = (cz * mz - bz * pz) / (mz + cz - bz - pz);
     else
@@ -154,12 +184,6 @@ void Shadow_polygone::set_z()
 
 
 }
-void Shadow_polygone::associate(double* d1, double* d2, double* d3)
-{
-    this->pointer_vertex_1 = d1;
-    this->pointer_vertex_2 = d2;
-    this->pointer_vertex_3 = d3;
-}
 
 
 
@@ -179,7 +203,8 @@ void  Shadow_polygone::draw(SDL_Renderer* ren)
 
    SDL_RenderDrawLine(ren, x1, y1, x2, y2);
    */
-
+    if (this->count_of_vertex != 3)
+        return;
 
     SDL_SetRenderDrawColor(ren, c.r, c.g, c.b, c.a);
     SDL_RenderDrawLine(ren, pointer_vertex_1[0], pointer_vertex_1[1], pointer_vertex_2[0], pointer_vertex_2[1]);

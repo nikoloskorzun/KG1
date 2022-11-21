@@ -49,10 +49,10 @@ public:
  
 private:
 
+    double* pointer_vertex_1;
+    double* pointer_vertex_2;
+    double* pointer_vertex_3;
 
-    double a;
-    double b;
-    double c;
 
 
 

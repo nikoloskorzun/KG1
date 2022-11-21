@@ -4,18 +4,19 @@
 #include <SDL.h>
 
 #include "template_functions.h"
+#include "base_polygone.h"
 
 
 using namespace std;
 
 
 
-class Shadow_polygone
-    //Полигон - это всегда треугольник
+class Shadow_polygone : public Base_polygone
+    //Теневой полигон - это многоугольник чаще треугольник но может быть 4-х и 5-ти угольник
+
 {
 public:
 
-    double z;
 
     Shadow_polygone(const Shadow_polygone& polygone_copy);
 
@@ -30,9 +31,8 @@ public:
     void set_z();
 
 
-    void associate(double* d1, double* d2, double* d3);
 
-
+    void set_vertexes(size_t count, double** v);
 
 
     void draw(SDL_Renderer* ren);
@@ -40,12 +40,14 @@ public:
 private:
 
 
-    Color c;
-
+    
+    size_t count_of_vertex;
 
     double* pointer_vertex_1;
     double* pointer_vertex_2;
     double* pointer_vertex_3;
+    double* pointer_vertex_4;
+    double* pointer_vertex_5;
 
 
 

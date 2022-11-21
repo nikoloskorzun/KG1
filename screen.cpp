@@ -14,9 +14,10 @@ using namespace std;
 
 static int double_compare(const void* p1, const void* p2)
 {
-    double a = ((Polygone*)p1)->z;
-    double b = ((Polygone*)p2)->z;
+    double a = (*((Base_polygone**)(p1)))->z;
+    double b = (*((Base_polygone**)(p2)))->z;
 
+    //cout << a<<" " << b << endl;
 
         
     if (a < b) return -1;
@@ -348,6 +349,12 @@ int Screen::cycle()
                     {
                         while (SDL_PollEvent(&event))
                         {
+                            if (event.type == SDL_QUIT)
+                            {
+                                exit = 0;
+                                light_exit = 0;
+                            }
+
                             if ((event.type == SDL_KEYDOWN))
                             {
                                 switch (event.key.keysym.sym)
@@ -358,7 +365,8 @@ int Screen::cycle()
                                 case SDLK_p:
                                     if (plane_flag)
                                         plane_flag = 0;
-                                    plane_flag = 1;
+                                    else
+                                        plane_flag = 1;
                                     break;
 
 
@@ -438,6 +446,16 @@ int Screen::cycle()
 
 
                                 }
+                            
+                                SDL_SetRenderDrawColor(ren, 0x00, 0x00, 0x00, 0x00);
+                                SDL_RenderClear(ren);
+
+
+                                draw_poligones(ren);
+
+                                SDL_RenderPresent(ren);
+
+                            
                             }
                         }
                     
@@ -586,7 +604,7 @@ void Screen::painter_algorithm()
         polygones[i]->set_z();
 
 
-    qsort(polygones, polygone_count, sizeof(Polygone), double_compare);
+    qsort(polygones, polygone_count, sizeof(Base_polygone*), double_compare);
 
 
 

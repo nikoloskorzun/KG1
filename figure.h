@@ -48,6 +48,8 @@ public:
 
     void create_projection();
 
+
+    //#TODO прописать сеттеры и геттеры
     void set_DX(double offset = 5);
     void set_DY(double offset = 5);
     void set_DZ(double offset = 5);

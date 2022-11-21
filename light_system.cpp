@@ -4,9 +4,6 @@
 
 
 
-//#include "template_functions.cpp"
-
-
 inline void Light_system::create_m_move() 
 {
     this->m_move = allocate_memory_for_N_M_array<double>(this->M, this->M);
@@ -269,6 +266,55 @@ void Light_system::move_back_light()
 }
 
 
+void Light_system::shadows_create(size_t amount_polygones, Polygone** polygones, Shadow_polygone** shadow_polygones)
+{
+    //Здесь нужно вызвать функцию которая "создает" теневой полигон для каждого полигона
+
+    size_t iter = 0;
+
+    size_t count_of_vertex;
+
+    double** vertexes = allocate_memory_for_N_M_array<double>(5, 3);
+
+    for (size_t i = 0; i < count_of_planes; i++)
+    {
+        for (size_t j = 0; j < amount_polygones; j++)
+        {
+
+            count_of_vertex = create_shadow(i, polygones[j], vertexes);
+
+
+            shadow_polygones[iter]->set_vertexes(count_of_vertex, vertexes);
+            iter++;
+
+        }
+
+
+    }
+
+}
+
+
+
+size_t Light_system::create_shadow(size_t number_of_plane, Polygone* polygone, double** vertexes)
+{
+    
+   //#TODO
+    //
+
+    //
+
+    //
+
+
+}
+
+
+
+
+
+
+
 
 
 void Light_system::rotate_y_positive_plane(size_t choice)
@@ -417,6 +463,12 @@ Light_system::Light_system(double** coord_light, size_t amount_planes, double***
     this->count_of_planes = amount_planes;
 
     this->light_point = allocate_memory_for_N_M_array<double>(1, this->M);
+    
+    for (i = 0; i < 4; i++)
+        this->light_point[0][i] = coord_light[0][i];
+
+
+
 
     create_m_move();
 
