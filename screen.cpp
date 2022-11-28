@@ -52,8 +52,13 @@ Screen::Screen(uint32_t width, uint32_t height) {
 
 void Screen::add_figures()//это функция говна, ее можно переписать и сделать инициализацию фигур нормальной, но зачем?
 {
-    this->polygones = new Base_polygone*[(12 + 4)*1 + 1 + 1];
-    this->polygone_count = (12 + 4) * 1 + 1 + 1;
+    this->polygones = new Base_polygone * [(12 + 4) * 2 + 1 + 1];
+    this->polygone_count = (12 + 4) * 2 + 1 + 1;
+
+
+    polygones_for_shadow = new Polygone * [12 + 4];
+    shadow_polygones_for_shadow = new Shadow_polygone * [12 + 4];
+
 
     size_t i = 0;
 
@@ -155,15 +160,15 @@ void Screen::add_figures()//это функция говна, ее можно переписать и сделать ини
     AB[7][2] = 100;
     AB[7][3] = 1;
 
-    
+
 
     this->figures[0].set(8, AB);
 
 
 
     this->figures[0].associate_figure_with_polygones(this->polygones, i_, 12);
- 
-    
+
+
     free_memory_for_N_M_array<size_t>(i_, 12, 3);
     free_memory_for_N_M_array<double>(AB, 8, 4);
 
@@ -214,7 +219,11 @@ void Screen::add_figures()//это функция говна, ее можно переписать и сделать ини
     this->figures[1].set(4, AB);
     this->figures[1].associate_figure_with_polygones(this->polygones, i_, 4, 12);
 
+    for (i = 0; i < 12 + 4; i++)
+    {
+        polygones_for_shadow[i] = (Polygone*)this->polygones[i];
 
+    }
 
 
 
@@ -223,9 +232,9 @@ void Screen::add_figures()//это функция говна, ее можно переписать и сделать ини
 
 
     double** l = allocate_memory_for_N_M_array<double>(1, 4);
-    l[0][0] = 0;
-    l[0][1] = 0;
-    l[0][2] = 0;
+    l[0][0] = 200;
+    l[0][1] = 200;
+    l[0][2] = 5000;
     l[0][3] = 1;
 
     double*** p = new double** [1];
@@ -235,25 +244,41 @@ void Screen::add_figures()//это функция говна, ее можно переписать и сделать ини
 
     p[0][0][0] = 0;
     p[0][0][1] = 0;
-    p[0][0][2] = 0;
+    p[0][0][2] = -1000;
     p[0][0][3] = 1;
 
     p[0][1][0] = 1;
     p[0][1][1] = 0;
-    p[0][1][2] = 0;
+    p[0][1][2] = -1000;
     p[0][1][3] = 1;
 
     p[0][2][0] = 0;
     p[0][2][1] = 1;
-    p[0][2][2] = 0;
+    p[0][2][2] = -1000;
     p[0][2][3] = 1;
 
     this->light_system = new Light_system(l, 1, p);
 
-    
-    this->light_system->associate_plane_with_polygones(this->polygones, 12+4);
 
-    this->light_system->associate_light_source_with_polygones(this->polygones, 12+4+1);
+    this->light_system->associate_plane_with_polygones(this->polygones, 12 + 4);
+
+    this->light_system->associate_light_source_with_polygones(this->polygones, 12 + 4 + 1);
+
+
+
+    Shadow_polygone* sp_t;
+    for (i = 0; i < 12 + 4; i++)
+    {
+    sp_t = new Shadow_polygone;
+    polygones[12 + 4 + 1 + 1 + i] = sp_t;
+
+    shadow_polygones_for_shadow[i] = sp_t;
+    }
+
+
+
+
+
 
 
 
@@ -586,6 +611,12 @@ Screen::~Screen() {
 void Screen::draw_poligones(SDL_Renderer* ren)
 {
     
+    cout << endl;
+    light_system->shadows_create(12 + 4, polygones_for_shadow, shadow_polygones_for_shadow);
+
+
+
+
     painter_algorithm();
 
     

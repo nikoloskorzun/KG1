@@ -28,14 +28,15 @@ public:
 
     ~Shadow_polygone();
 
-    void set_z();
+    virtual void set_z() override;
 
-
+    virtual void set_ñolor(Color ñolor_) override;
+    virtual Color get_ñolor() override;
 
     void set_vertexes(size_t count, double** v);
 
 
-    void draw(SDL_Renderer* ren);
+    virtual void draw(SDL_Renderer* ren) override;
 
 private:
 

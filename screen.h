@@ -73,6 +73,9 @@ private:
 
     Base_polygone** polygones;
 
+    Polygone** polygones_for_shadow;
+    Shadow_polygone** shadow_polygones_for_shadow;
+
 
     //Polygone* polygones;
 

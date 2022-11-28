@@ -66,8 +66,120 @@ private:
         return line{ p, l.s };
     }
 
+    point intersection_line_plane(line l, plane p)
+    {
+        double** m = allocate_memory_for_N_M_array<double>(3, 3);
+
+        m[0][0] = l.s.y;
+        m[0][1] = -l.s.x;
+        m[0][2] = 0;
+
+        m[1][0] = 0;
+        m[1][1] = l.s.z;
+        m[1][2] = -l.s.y;
+
+        m[2][0] = p.A;
+        m[2][1] = p.B;
+        m[2][2] = p.C;
+
+        double* v = new double[3];
+
+        v[0] = l.s.y * l.p.x - l.s.x * l.p.y;
+        v[1] = l.s.z * l.p.y - l.s.y * l.p.z;
+        v[2] = -p.D;
 
 
+        double* ans = fucking_Cramer_LS_solver(m, v, 3);
+
+        point P{ ans[0], ans[1], ans[2] };
+
+        delete[] ans;
+        delete[] v;
+        free_memory_for_N_M_array<double>(m, 3, 3);
+
+        return P;
+    }
+
+
+    plane plane_with_3_points(point p1, point p2, point p3)
+    {
+        return plane{ p1.y * (p2.z - p3.z) + p2.y * (p3.z - p1.z) + p3.y * (p1.z - p2.z),
+            p1.x * (p3.z - p2.z) + p2.x * (p1.z - p3.z) + p3.x * (p2.z - p1.z),
+            p1.x * (p2.y - p3.y) + p2.x * (p3.y - p1.y) + p3.x * (p1.y - p2.y),
+            (p1.x * (p2.y * p3.z - p3.y * p2.z) + p2.x * (p3.y * p1.z - p1.y * p3.z) + p3.x * (p1.y * p2.z - p2.y * p1.z)) };
+
+
+
+    }
+    
+    double determinant(double** mat, size_t n)
+    {
+        if (n == 3)
+            return (mat[0][0]*mat[1][1]*mat[2][2] - mat[0][0] * mat[1][2] * mat[2][1] - mat[0][1] * mat[1][0] * mat[2][2] + mat[0][1] * mat[1][2] * mat[2][0] + mat[0][2] * mat[1][0] * mat[2][1] - mat[0][2] * mat[1][1] * mat[2][0]);
+        else
+            cout << "ERROR:DETERMINANT!\n";
+
+
+    }
+
+    double* fucking_Cramer_LS_solver(double** mat, double* vec, size_t n)
+    {
+
+        if (n != 3)
+        {
+            cout << "Cramer Error\n";
+            return NULL;
+        }
+        double* ans = new double[n];
+
+        double det = determinant(mat, n);
+
+        double** mat_ = allocate_memory_for_N_M_array<double>(n, n);
+
+        mat_[0][0] = vec[0];
+        mat_[0][1] = vec[1];
+        mat_[0][2] = vec[2];
+
+        mat_[1][0] = mat[1][0];
+        mat_[1][1] = mat[1][1];
+        mat_[1][2] = mat[1][2];
+
+        mat_[2][0] = mat[2][0];
+        mat_[2][1] = mat[2][1];
+        mat_[2][2] = mat[2][2];
+
+
+
+
+        double det1 = determinant(mat_, n);
+        mat_[0][0] = mat[0][0];
+        mat_[0][1] = mat[0][1];
+        mat_[0][2] = mat[0][2];
+
+        mat_[1][0] = vec[0];
+        mat_[1][1] = vec[1];
+        mat_[1][2] = vec[2];
+        double det2 = determinant(mat_, n);
+        mat_[1][0] = mat[1][0];
+        mat_[1][1] = mat[1][1];
+        mat_[1][2] = mat[1][2];
+
+        mat_[2][0] = vec[0];
+        mat_[2][1] = vec[1];
+        mat_[2][2] = vec[2];
+        double det3 = determinant(mat_, n);
+
+
+        if (det == 0)
+            det = 0.000001;
+        ans[0] = det1 / det;
+        ans[1] = det2 / det;
+        ans[2] = det3 / det;
+
+        free_memory_for_N_M_array<double>(mat_, n, n);
+
+        return ans;
+    }
 
 
 

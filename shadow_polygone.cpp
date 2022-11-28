@@ -140,6 +140,9 @@ void Shadow_polygone::set_z()
     //z = (pointer_vertex_1[2] + pointer_vertex_2[2] + pointer_vertex_3[2]) / 3;
     //return;
 
+    if (!count_of_vertex)
+        return;
+
     double az = pointer_vertex_1[2], bz = pointer_vertex_2[2], cz = pointer_vertex_3[2];
 
 
@@ -185,7 +188,20 @@ void Shadow_polygone::set_z()
 
 }
 
+void Shadow_polygone::set_ñolor(Color ñolor)
+{
+    this->c.r = 255;
+    this->c.g = 255;
+    this->c.b = 255;
+    this->c.a = 255;
+}
 
+
+
+Color Shadow_polygone::get_ñolor()
+{
+    return c;
+}
 
 void  Shadow_polygone::draw(SDL_Renderer* ren)
 {
@@ -205,6 +221,24 @@ void  Shadow_polygone::draw(SDL_Renderer* ren)
    */
     if (this->count_of_vertex != 3)
         return;
+    
+
+    if(0)
+        for(int i=0; i<3; i++)
+    { 
+        if (pointer_vertex_1[i] < 0 || pointer_vertex_1[i]>5000)
+            return;
+        if (pointer_vertex_2[i] < 0 || pointer_vertex_2[i]>5000)
+            return;
+        if (pointer_vertex_3[i] < 0 || pointer_vertex_3[i]>5000)
+            return;        
+        
+
+    }
+
+    cout << "<"<<pointer_vertex_1[0] << " " << pointer_vertex_1[1] << " " << pointer_vertex_1[2] << endl;
+    cout << pointer_vertex_2[0] << " " << pointer_vertex_2[1] << " " << pointer_vertex_2[2] << endl;
+    cout << pointer_vertex_3[0] << " " << pointer_vertex_3[1] << " " << pointer_vertex_3[2]<<">" << endl;
 
     SDL_SetRenderDrawColor(ren, c.r, c.g, c.b, c.a);
     SDL_RenderDrawLine(ren, pointer_vertex_1[0], pointer_vertex_1[1], pointer_vertex_2[0], pointer_vertex_2[1]);

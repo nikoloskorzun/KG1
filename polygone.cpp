@@ -170,6 +170,20 @@ void Polygone::associate(double* d1, double* d2, double* d3)
 
 
 
+double* Polygone::get_vertex1()
+{
+    return this->pointer_vertex_1;
+}
+double* Polygone::get_vertex2()
+{
+    return this->pointer_vertex_2;
+}
+double* Polygone::get_vertex3()
+{
+    return this->pointer_vertex_3;
+}
+
+
 void  Polygone::draw(SDL_Renderer* ren)
 {
 

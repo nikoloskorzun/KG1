@@ -283,6 +283,7 @@ void Light_system::shadows_create(size_t amount_polygones, Polygone** polygones,
 
             count_of_vertex = create_shadow(i, polygones[j], vertexes);
 
+            //cout << vertexes[0][0] << endl;
 
             shadow_polygones[iter]->set_vertexes(count_of_vertex, vertexes);
             iter++;
@@ -298,7 +299,72 @@ void Light_system::shadows_create(size_t amount_polygones, Polygone** polygones,
 
 size_t Light_system::create_shadow(size_t number_of_plane, Polygone* polygone, double** vertexes)
 {
+
+
+
+    point L = { light_point[0][0], light_point[0][1], light_point[0][2] };
+
+    point P1 = { polygone->get_vertex1()[0], polygone->get_vertex1()[1], polygone->get_vertex1()[2] };
+    point P2 = { polygone->get_vertex2()[0], polygone->get_vertex2()[1], polygone->get_vertex2()[2] };
+    point P3 = { polygone->get_vertex3()[0], polygone->get_vertex3()[1], polygone->get_vertex3()[2] };
+
+
+
+
+
+    /*
     
+    {
+1. »деальный
+    L---Ti---P или P---Ti---L
+    ѕересечение этой пр€мой с P - искома€ точка Ki
+2. »сточник света между плоскостью и точкой полигона
+    Ti---L---P или P---L---Ti
+    “ень не создаетс€ дл€ этой точки.
+3. ѕлоскость между источником света и точкой полигона
+    L---P---Ti или T---P---L
+    “ень не создаетс€ дл€ этой точки.
+4. ѕлоскость параллельна пр€мой между источником света и точкой полигона
+    L---Ti не пересекает P}
+
+    
+    */
+    
+
+
+    line line_L_P1 = point_point2line(L, P1);
+
+    line line_L_P2 = point_point2line(L, P2);
+    
+    line line_L_P3 = point_point2line(L, P3);
+
+
+
+    plane plane_ = plane_with_3_points(point{ planes[number_of_plane][0][0],planes[number_of_plane][0][1],planes[number_of_plane][0][2]}, point{ planes[number_of_plane][1][0],planes[number_of_plane][1][1],planes[number_of_plane][1][2] }, point{ planes[number_of_plane][2][0],planes[number_of_plane][2][1],planes[number_of_plane][2][2] });
+    cout << plane_.A << " " << plane_.B << " " << plane_.C << " " << plane_.D << endl;
+
+    point p1 = intersection_line_plane(line_L_P1, plane_);
+    point p2 = intersection_line_plane(line_L_P2, plane_);
+    point p3 = intersection_line_plane(line_L_P3, plane_);
+
+
+    //cout << p1.x<<" "<< p1.y << " " << p1.z << endl;
+    //cout << p2.x<<" "<< p2.y << " " << p2.z << endl;
+    //cout << p3.x<<" "<< p3.y << " " << p3.z << endl;
+    vertexes[0][0] = p1.x;
+    vertexes[0][1] = p1.y;
+    vertexes[0][2] = p1.z;
+
+    vertexes[1][0] = p2.x;
+    vertexes[1][1] = p2.y;
+    vertexes[1][2] = p2.z;
+
+    vertexes[2][0] = p3.x;
+    vertexes[2][1] = p3.y;
+    vertexes[2][2] = p3.z;
+
+    //int type_vertex_1;
+
    //#TODO
     //
 
@@ -306,6 +372,9 @@ size_t Light_system::create_shadow(size_t number_of_plane, Polygone* polygone, d
 
     //
 
+
+
+    return 3;
 
 }
 
