@@ -6,7 +6,7 @@
 
 //#include "template_functions.h"
 
-
+#define DEBUG 1
 
 
 #include "screen.h"

@@ -57,7 +57,7 @@ private:
     line point_point2line(point p1, point p2)
     {
         //прямая по 2 точкам
-        return line{ p1, vector_{p2.x - p1.x, p2.y - p1.y, p2.z - p1.z} };
+        return line{ p2, vector_{p1.x - p2.x, p1.y - p2.y, p1.z - p2.z} };
     }
 
     line paral_line_through_point(line l, point p)
@@ -68,6 +68,19 @@ private:
 
     point intersection_line_plane(line l, plane p)
     {
+
+
+        if ((p.A * (l.s.x) + p.B * (l.s.y) + p.C * (l.s.z)) == 0)
+        { 
+            cout << "ERR div by zero!\n\n";
+            return point{ 0,0,0 };
+        }
+        double t = (-(p.A * (l.p.x) + p.B * (l.p.y) + p.C * (l.p.z) + p.D))/ (p.A * (l.s.x) + p.B * (l.s.y) + p.C * (l.s.z));
+
+
+
+        return point{l.p.x + l.s.x*t, l.p.y + l.s.y * t, l.p.z + l.s.z * t};
+        //О***ть вот так можно было, вот это кайф реально
         double** m = allocate_memory_for_N_M_array<double>(3, 3);
 
         m[0][0] = l.s.y;
@@ -116,9 +129,9 @@ private:
     {
         if (n == 3)
             return (mat[0][0]*mat[1][1]*mat[2][2] - mat[0][0] * mat[1][2] * mat[2][1] - mat[0][1] * mat[1][0] * mat[2][2] + mat[0][1] * mat[1][2] * mat[2][0] + mat[0][2] * mat[1][0] * mat[2][1] - mat[0][2] * mat[1][1] * mat[2][0]);
-        else
-            cout << "ERROR:DETERMINANT!\n";
-
+            
+        cout << "ERROR:DETERMINANT!\n";
+        return 0;
 
     }
 
@@ -234,7 +247,6 @@ private:
     double** m_rotate_x;
     double** m_rotate_y;
     double** m_rotate_z;
-
 
 
 

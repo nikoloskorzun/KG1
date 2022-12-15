@@ -9,11 +9,11 @@
 
 using namespace std;
 
-
+//Самый плохой (слишком много допущений) класс
 
 class Shadow_polygone : public Base_polygone
     //Теневой полигон - это многоугольник чаще треугольник но может быть 4-х и 5-ти угольник
-
+    //логика хранения координат в теневом полигоне выбивается из логики хранения привычных координат. здесь мы не храним указатели на координаты а сразу храним координаты, потомучто так логичнее всего.
 {
 public:
 
@@ -44,11 +44,7 @@ private:
     
     size_t count_of_vertex;
 
-    double* pointer_vertex_1;
-    double* pointer_vertex_2;
-    double* pointer_vertex_3;
-    double* pointer_vertex_4;
-    double* pointer_vertex_5;
+    double **coords;//5*3 always - bad code
 
 
 

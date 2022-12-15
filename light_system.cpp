@@ -274,13 +274,12 @@ void Light_system::shadows_create(size_t amount_polygones, Polygone** polygones,
 
     size_t count_of_vertex;
 
-    double** vertexes = allocate_memory_for_N_M_array<double>(5, 3);
+    double** vertexes = allocate_memory_for_N_M_array<double>(5, 3);;
 
     for (size_t i = 0; i < count_of_planes; i++)
     {
         for (size_t j = 0; j < amount_polygones; j++)
         {
-
             count_of_vertex = create_shadow(i, polygones[j], vertexes);
 
             //cout << vertexes[0][0] << endl;
@@ -292,6 +291,8 @@ void Light_system::shadows_create(size_t amount_polygones, Polygone** polygones,
 
 
     }
+
+    free_memory_for_N_M_array<double>(vertexes, 5, 3);
 
 }
 
@@ -341,16 +342,35 @@ size_t Light_system::create_shadow(size_t number_of_plane, Polygone* polygone, d
 
 
     plane plane_ = plane_with_3_points(point{ planes[number_of_plane][0][0],planes[number_of_plane][0][1],planes[number_of_plane][0][2]}, point{ planes[number_of_plane][1][0],planes[number_of_plane][1][1],planes[number_of_plane][1][2] }, point{ planes[number_of_plane][2][0],planes[number_of_plane][2][1],planes[number_of_plane][2][2] });
-    cout << plane_.A << " " << plane_.B << " " << plane_.C << " " << plane_.D << endl;
+    
 
     point p1 = intersection_line_plane(line_L_P1, plane_);
     point p2 = intersection_line_plane(line_L_P2, plane_);
     point p3 = intersection_line_plane(line_L_P3, plane_);
 
+    //cout << line_L_P1.p.x << " " << line_L_P1.s.x << endl;
+    //cout << line_L_P1.p.y << " " << line_L_P1.s.y << endl;
+    //cout << line_L_P1.p.z << " " << line_L_P1.s.z << endl;
 
-    //cout << p1.x<<" "<< p1.y << " " << p1.z << endl;
-    //cout << p2.x<<" "<< p2.y << " " << p2.z << endl;
-    //cout << p3.x<<" "<< p3.y << " " << p3.z << endl;
+#ifdef DEBUG
+
+
+
+    cout << "PLANE: " << plane_.A << " " << plane_.B << " " << plane_.C << " " << plane_.D << endl;
+
+    cout << "point pol1: " << P1.x << " " << P1.y << " " << P1.z << " " << endl;
+    cout << "point pol2: " << P2.x << " " << P2.y << " " << P2.z << " " << endl;
+    cout << "point pol3: " << P3.x << " " << P3.y << " " << P3.z << " " << endl;
+    cout << "point light: " << L.x << " " << L.y << " " << L.z << " " << endl;
+    
+    cout << "Line1: (" << line_L_P1.p.x << "; " << line_L_P1.p.y<<"; " << line_L_P1.p.z << ")   (" << line_L_P1.s.x << "; " << line_L_P1.s.y << "; " << line_L_P1.s.z << ")" << endl;
+    cout << "Line2: (" << line_L_P2.p.x << "; " << line_L_P2.p.y << "; " << line_L_P2.p.z << ")   (" << line_L_P2.s.x << "; " << line_L_P2.s.y << "; " << line_L_P2.s.z << ")" << endl;
+    cout << "Line3: (" << line_L_P3.p.x << "; " << line_L_P3.p.y << "; " << line_L_P3.p.z << ")   (" << line_L_P3.s.x << "; " << line_L_P3.s.y << "; " << line_L_P3.s.z << ")" << endl;
+
+    cout << "point intersect: " << p1.x << " " << p1.y << " " << p1.z << " " << endl;
+    cout << "point intersect: " << p2.x << " " << p2.y << " " << p2.z << " " << endl;
+    cout << "point intersect: " << p3.x << " " << p3.y << " " << p3.z << " " << endl<<endl;
+#endif // DEBUG
     vertexes[0][0] = p1.x;
     vertexes[0][1] = p1.y;
     vertexes[0][2] = p1.z;

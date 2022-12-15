@@ -244,17 +244,17 @@ void Screen::add_figures()//это функция говна, ее можно переписать и сделать ини
 
     p[0][0][0] = 0;
     p[0][0][1] = 0;
-    p[0][0][2] = -1000;
+    p[0][0][2] = 1000;
     p[0][0][3] = 1;
 
-    p[0][1][0] = 1;
+    p[0][1][0] = 100;
     p[0][1][1] = 0;
-    p[0][1][2] = -1000;
+    p[0][1][2] = 1000;
     p[0][1][3] = 1;
 
     p[0][2][0] = 0;
-    p[0][2][1] = 1;
-    p[0][2][2] = -1000;
+    p[0][2][1] = 100;
+    p[0][2][2] = 1000;
     p[0][2][3] = 1;
 
     this->light_system = new Light_system(l, 1, p);
@@ -611,7 +611,6 @@ Screen::~Screen() {
 void Screen::draw_poligones(SDL_Renderer* ren)
 {
     
-    cout << endl;
     light_system->shadows_create(12 + 4, polygones_for_shadow, shadow_polygones_for_shadow);
 
 

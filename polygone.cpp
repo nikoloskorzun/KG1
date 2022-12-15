@@ -91,9 +91,9 @@ void Polygone::set_z()
 {
     /*
 
-    cout << pointer_vertex_1[0] << "; " << pointer_vertex_1[1] << "; " << pointer_vertex_1[2] << endl;
-    cout << pointer_vertex_2[0] << "; " << pointer_vertex_2[1] << "; " << pointer_vertex_2[2] << endl;
-    cout << pointer_vertex_3[0] << "; " << pointer_vertex_3[1] << "; " << pointer_vertex_3[2] << endl;
+    //cout << pointer_vertex_1[0] << "; " << pointer_vertex_1[1] << "; " << pointer_vertex_1[2] << endl;
+    //cout << pointer_vertex_2[0] << "; " << pointer_vertex_2[1] << "; " << pointer_vertex_2[2] << endl;
+    //cout << pointer_vertex_3[0] << "; " << pointer_vertex_3[1] << "; " << pointer_vertex_3[2] << endl;
     */
 
 
