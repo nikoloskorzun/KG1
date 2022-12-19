@@ -269,14 +269,20 @@ T1T2T3
 
 */
 
-int main(int argc, char* argv[])
-{
-    srand(1);
 
+void temp()
+{
     Screen s(800, 800);
 
     s.add_figures();
     s.cycle();
+}
+
+int main(int argc, char* argv[])
+{
+    srand(1);
+
+    temp();
 
 
     return 0;

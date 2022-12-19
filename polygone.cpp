@@ -182,7 +182,10 @@ double* Polygone::get_vertex3()
 {
     return this->pointer_vertex_3;
 }
+void  Polygone::draw_proj(SDL_Renderer* ren)
+{
 
+}
 
 void  Polygone::draw(SDL_Renderer* ren)
 {

@@ -84,6 +84,8 @@ private:
 
     size_t polygone_count;
 
+    size_t polygone_count_for_shadow;
+
     
     void draw_poligones(SDL_Renderer* ren);
     void painter_algorithm();

@@ -57,7 +57,7 @@ Plane::Plane(const Plane& polygone_copy)
 
     void Plane::set_z() 
     {
-        z =( this->pointer_vertex_1[2] + this->pointer_vertex_2[2] + this->pointer_vertex_3[2])/3;
+        z =( this->pointer_vertex_1[2] + this->pointer_vertex_2[2] + this->pointer_vertex_3[2])/3 -1; //-1 нужен для корректного отбражения теней
     }
 
 
@@ -78,7 +78,7 @@ Plane::Plane(const Plane& polygone_copy)
 
      void Plane::draw(SDL_Renderer* ren) 
      {
-         return;
+         //return;
          SDL_SetRenderDrawColor(ren, c.r, c.g, c.b, c.a);
          SDL_RenderClear(ren);
          //no

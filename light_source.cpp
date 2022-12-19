@@ -25,7 +25,7 @@ Light_source::Light_source()
 
 	this->c.r = 255;
 	this->c.g = 255;
-	this->c.b = 255;
+	this->c.b = 0;
 	this->c.a = 255;
 
 }

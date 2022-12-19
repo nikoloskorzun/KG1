@@ -42,6 +42,7 @@ public:
 
 
     virtual void draw(SDL_Renderer* ren) override;
+    void draw_proj(SDL_Renderer* ren);
 
     double* get_vertex1();
     double* get_vertex2();
