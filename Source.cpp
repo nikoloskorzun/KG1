@@ -276,6 +276,7 @@ void temp()
 
     s.add_figures();
     s.cycle();
+
 }
 
 int main(int argc, char* argv[])

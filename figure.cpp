@@ -79,14 +79,18 @@ void Figure::associate_figure_with_polygones(Base_polygone** polygone_array, siz
     }
 
 }
-void Figure::associate_figure_proj_with_polygones(Polygone* polygone_array, size_t** rule, size_t polugones_count, size_t first_elem_pos)
+void Figure::associate_figure_proj_with_polygones(Base_polygone** polygone_array, size_t** rule, size_t polugones_count, size_t first_elem_pos)
 {
-    cout << "ERROR a_f_p_w_p\n\n";
-
+    Polygone* p;
+    Color c = { 255,255,255,255 };
     for (size_t i = 0; i < polugones_count; i++)
     {
+        p = new Polygone;
 
-        polygone_array[i + first_elem_pos].associate(this->f_proj[rule[i][0]], this->f_proj[rule[i][1]], this->f_proj[rule[i][2]]);
+        p->associate(this->f_proj[rule[i][0]], this->f_proj[rule[i][1]], this->f_proj[rule[i][2]]);
+        p->set_ñolor(c);
+        polygone_array[i + first_elem_pos] = p;
+
 
     }
 
@@ -154,6 +158,11 @@ Figure::~Figure()
     {
         free_memory_for_N_M_array<double>(this->f, this->N, this->M);
     }
+    if (this->f_proj)
+    {
+        free_memory_for_N_M_array<double>(this->f_proj, this->N, this->M);
+    }
+
     if (this->m_move)
     {
         free_memory_for_N_M_array<double>(this->m_move, this->M, this->M);

@@ -26,7 +26,7 @@ public:
     ~Figure();
    
     void associate_figure_with_polygones(Base_polygone** polygone_array, size_t **rule, size_t polugones_count, size_t first_elem_pos = 0);
-    void associate_figure_proj_with_polygones(Polygone* polygone_array, size_t **rule, size_t polugones_count, size_t first_elem_pos = 0);
+    void associate_figure_proj_with_polygones(Base_polygone** polygone_array, size_t **rule, size_t polugones_count, size_t first_elem_pos = 0);
 
     void move_up();
     void move_down();

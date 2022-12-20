@@ -73,11 +73,11 @@ private:
 
     Base_polygone** polygones;
 
-    Polygone** polygones_for_shadow;
-    Shadow_polygone** shadow_polygones_for_shadow;
+    Polygone** polygones_for_shadow;// полигоны не пропускающие свет.
+    Shadow_polygone** shadow_polygones_for_shadow;// ТЕНИ
 
 
-    //Polygone* polygones;
+    Base_polygone** polygones_projection;
 
 
     //Shadow_polygone* shadow_polygones;

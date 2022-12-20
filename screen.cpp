@@ -57,6 +57,7 @@ void Screen::add_figures()//это функция говна, ее можно переписать и сделать ини
 
 
     polygones_for_shadow = new Polygone * [12 + 8];
+    polygones_projection = new Base_polygone * [12 + 8];
     shadow_polygones_for_shadow = new Shadow_polygone * [12 + 8];
 
 
@@ -167,6 +168,7 @@ void Screen::add_figures()//это функция говна, ее можно переписать и сделать ини
 
 
     this->figures[0].associate_figure_with_polygones(this->polygones, i_, 12);
+    this->figures[0].associate_figure_proj_with_polygones(this->polygones_projection, i_, 12);
 
 
     free_memory_for_N_M_array<size_t>(i_, 12, 3);
@@ -246,6 +248,7 @@ void Screen::add_figures()//это функция говна, ее можно переписать и сделать ини
 
     this->figures[1].set(6, AB);
     this->figures[1].associate_figure_with_polygones(this->polygones, i_, 8, 12);
+    this->figures[1].associate_figure_proj_with_polygones(this->polygones_projection, i_, 8, 12);
 
     for (i = 0; i < 12 + 8; i++)
     {
@@ -354,6 +357,8 @@ int Screen::cycle()
     cout << "\t[l] - on/off light control\n";
     cout << "\t[p] - if light control ON plane control ON/OFF\n";
 
+    cout << "\t[0] - projection on/off\n";
+
     cout << "\n\tlight control OFF\n";
     cout << "\t[1] - choice figure 1\n";
     cout << "\t[2] - choice figure 2\n";
@@ -361,6 +366,9 @@ int Screen::cycle()
     cout << "\n\tlight control ON\n";
     cout << "\t[1] - choice plane 1\n";
     cout << "\t[2] - choice plane 2\n";
+
+
+
 
  
 
@@ -396,6 +404,8 @@ int Screen::cycle()
                 {
 
                 case SDLK_l:
+                    if (proj_flag)
+                        break;
                     //управление "светом"
                     light_exit = 1;
                     while(light_exit)
@@ -592,15 +602,36 @@ int Screen::cycle()
 
 
                 }
+                if (proj_flag)
+                {
 
-                //draw
-                SDL_SetRenderDrawColor(ren, 0x00, 0x00, 0x00, 0x00);
-                SDL_RenderClear(ren);
+                    SDL_SetRenderDrawColor(ren, 0x00, 0x00, 0x00, 0x00);
+                    SDL_RenderClear(ren);
 
-                
-                draw_poligones(ren);
 
-                SDL_RenderPresent(ren);
+
+                    figures[0].create_projection();
+                    figures[1].create_projection();
+                    for (register size_t i = 0; i < 12 + 8; i++)
+                        polygones_projection[i]->draw(ren);
+
+                    SDL_RenderPresent(ren);
+
+                }
+                else
+                {
+                    SDL_SetRenderDrawColor(ren, 0x00, 0x00, 0x00, 0x00);
+                    SDL_RenderClear(ren);
+
+                    draw_poligones(ren);
+
+
+                    SDL_RenderPresent(ren);
+
+
+                }
+
+
 
 
 
@@ -639,6 +670,16 @@ Screen::~Screen() {
         delete[] polygones;
 
     }
+    if (polygones_projection)
+    {
+        for (size_t i = 0; i < 12 + 8; i++)
+            delete polygones_projection[i];
+        delete[] polygones_projection;
+
+    }
+
+
+
     if (polygones_for_shadow)
         delete[] polygones_for_shadow;
     if (shadow_polygones_for_shadow)
@@ -656,12 +697,12 @@ Screen::~Screen() {
 void Screen::draw_poligones(SDL_Renderer* ren)
 {
     
-    light_system->shadows_create(12 + 8, polygones_for_shadow, shadow_polygones_for_shadow);
+    light_system->shadows_create(12 + 8, polygones_for_shadow, shadow_polygones_for_shadow);//построение теней
 
 
 
 
-    painter_algorithm();
+    painter_algorithm(); //сортировка по z - так "работает" алгоритм художника
 
     
     for (register size_t i = 0; i < polygone_count; i++)
